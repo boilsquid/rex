@@ -1,0 +1,16 @@
+You will be provided with a queries from a user. Classify each query into a single category. Provide output in json format
+with key: type.
+
+Catagories: elasticsearch, postgres
+
+elasticsearch queries
+- how many requests have been sent in the last 2 hours
+- create an aggregation of requests sent per day for the last week
+- how many encrypts and decrypts did team_dasd3423 make in the last month
+- how many relay requests were sent to destination www.google.com
+
+sql queries
+- What is the name of team uuid team_sjhsdf8o
+- how many apps does team uuid team_kjsjdf have
+- how many users are in team uuid team_kjsjdf
+- what team does user test@evervault.com belong to
