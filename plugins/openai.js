@@ -1,8 +1,4 @@
-import { FastifyInstance } from 'fastify';
-import { FastifyRequest, FastifyReply } from 'fastify';
 import OpenAI from 'openai';
-import { openFile } from '../utils/files';
-import { ChatCompletion } from 'openai/resources';
 
 const opts = {
   schema: {
@@ -16,16 +12,18 @@ const opts = {
 }
 
 
-const elasticPrompt = openFile('src/prompts/elastic.txt');
-const elasticResponsePrompt = openFile('src/prompts/elastic-response.txt');
-async function plugin (fastify: FastifyInstance, opts: any) {
+
+async function plugin (fastify, opts) {
+  const elasticPrompt = fastify.openFile('prompts/elastic.txt');
+  const elasticResponsePrompt = fastify.openFile('prompts/elastic-response.txt');
+  
   const openai = new OpenAI({apiKey: fastify.config.OPENAI_API_KEY});
   
-  fastify.post('/', opts, async (request: FastifyRequest<{ Body: { question: string } }>, reply: FastifyReply) => {
+  fastify.post('/', opts, async (request, reply) => {
     const { question } = request.body;
 
-    const jsonFormat: Record<string, string> = { "type": "json_object" };
-    const textFormat: Record<string, string> = { "type": "text" };
+    const jsonFormat = { "type": "json_object" };
+    const textFormat = { "type": "text" };
 
 
     // const res: ChatCompletion = await openai.chat.completions.create({
@@ -50,13 +48,13 @@ async function plugin (fastify: FastifyInstance, opts: any) {
       }
     }`};
     console.log('Storage Query:', JSON.stringify(storageQuery.content));
-    const parsedQuery = JSON.parse(storageQuery.content as string);
+    const parsedQuery = JSON.parse(storageQuery.content);
         
     const result = await fastify.opensearchQuery(parsedQuery);
     
     try {
       console.log("Being sent to openAI: ", JSON.stringify(result.body));
-      const esResponsePromptRes: ChatCompletion = await openai.chat.completions.create({
+      const esResponsePromptRes = await openai.chat.completions.create({
         messages: [
           { role: 'system', content: elasticResponsePrompt },
           { role: 'user', content: JSON.stringify(result.body) }

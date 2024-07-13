@@ -2,15 +2,14 @@ import fp from 'fastify-plugin';
 import { Client } from '@opensearch-project/opensearch';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
-import { FastifyInstance } from 'fastify';
 
-export default fp(async function (fastify: FastifyInstance) {
+export default fp(async function (fastify) {
   const opensearchClient = getOpensearchClient(fastify);
   fastify.decorate('opensearch', opensearchClient);
   fastify.decorate('opensearchQuery', opensearchQuery(opensearchClient));
 });
 
-export function getOpensearchClient(fastify: FastifyInstance) {
+export function getOpensearchClient(fastify) {
   const domain = process.env.OPENSEARCH_DOMAIN_ENDPOINT;
 
   return new Client({
@@ -23,7 +22,7 @@ export function getOpensearchClient(fastify: FastifyInstance) {
   });
 }
 
-function getTemporaryCredentialProvider(opensearchArn: string) {
+function getTemporaryCredentialProvider(opensearchArn) {
   const ElasticSearchAccessPolicy = {
     Version: '2012-10-17',
     Statement: [
@@ -48,8 +47,8 @@ function getTemporaryCredentialProvider(opensearchArn: string) {
   });
 }
 
-function opensearchQuery(opensearchClient: Client) {
-  return async (query: Record<string, any>) => {
+function opensearchQuery(opensearchClient) {
+  return async (query) => {
     try {
       console.log('Executing ES query:', query);
       const result = await opensearchClient.search({
