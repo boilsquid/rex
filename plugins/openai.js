@@ -21,7 +21,7 @@ async function plugin (fastify, opts) {
   
   fastify.post('/', opts, async (request, reply) => {
     const { question } = request.body;
-
+    fastify.log.info(`Incoming question: ${question}`);
     const jsonFormat = { "type": "json_object" };
     const textFormat = { "type": "text" };
 

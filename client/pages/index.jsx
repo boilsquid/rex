@@ -1,4 +1,4 @@
-import logo from '/assets/logo.svg'
+import logo from '/assets/logo.png'
 
 export function getMeta () {
   return {
@@ -7,11 +7,26 @@ export function getMeta () {
 }
 
 export default function Index () {
-  const message = 'Welcome to @fastify/react!'
   return (
     <>
-      <p>{message}</p>
       <img style={{width: '100%'}} src={logo} />
+      <Prompt />
     </>
   )
+}
+
+function Prompt() {
+  function query(formData) {
+    const query = formData.get("query");
+    console.log("Query", query);
+  }
+
+  return (
+    <div>
+      <form action={query}>
+        <input type="text" name="query" />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
 }
